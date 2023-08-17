@@ -36,10 +36,10 @@ function App() {
     let faceDataArrays = []
 
     if(faceData.length !== 0 ) {
-      for (let i = 0; faceDataArrays.length < 1024; i++) {
+      for (let i = 0; faceDataArrays.length < 1000000; i++) {
         faceDataArrays.push(...faceData[0].keypoints);
       
-        if (i >= 1024 / faceData.length) {
+        if (i >= 1000000 / faceData.length) {
           break;
         }
       }
