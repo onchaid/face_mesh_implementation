@@ -57,11 +57,32 @@ function App() {
 
   useEffect(() => {
     if(faceDataArraysMatrix.length >= 0 && flag && loaded) {
-      console.log('*** faceDataArraysMatrix', faceDataArraysMatrix)
+      // console.log('*** faceDataArraysMatrix', faceDataArraysMatrix)
       setFlag(false)
     }
   },[loaded, flag, faceDataArraysMatrix])
 
+  useEffect(() => {
+    if(!flag && loaded && faceDataArraysMatrix) {
+      const unitaryHashMatrix = createUnitaryHashMatrix(faceDataArraysMatrix);
+      console.log('****** unitaryHashMatrix',unitaryHashMatrix);
+    }
+  }, [flag, loaded, faceDataArraysMatrix])
+
+
+  const createUnitaryHashMatrix = (array) => {
+    return array.reduce((hashMatrix, obj) => {
+      const { name, ...rest } = obj;
+      if (name) {
+        if (!hashMatrix[name]) {
+          hashMatrix[name] = [];
+        }
+        hashMatrix[name].push(rest);
+      }
+      return hashMatrix;
+    }, {});
+  }
+  
   return (
     <div>
       <Webcam
