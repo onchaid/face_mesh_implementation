@@ -67,7 +67,7 @@ function App() {
       const unitaryHashMatrix = createUnitaryHashMatrix(faceDataArraysMatrix);
       console.log('****** unitaryHashMatrix',unitaryHashMatrix);
     }
-  }, [flag, loaded, faceDataArraysMatrix])
+  }, [flag])
 
 
   const createUnitaryHashMatrix = (array) => {
