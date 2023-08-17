@@ -18,7 +18,7 @@ export const RunDetector = async (video, canvas, faceData, setFaceData) => {
       drawMesh(faces[0], ctx)
     })
 
-    setFaceData(faces.slice(0, 1000000));
+    setFaceData(faces.slice(0, 1024));
     detect(detector);
   };
   detect(detector);
