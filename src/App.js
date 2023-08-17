@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState, useContext } from "react";
 import "@tensorflow/tfjs";
 // Register WebGL backend.
@@ -5,21 +6,23 @@ import "@tensorflow/tfjs-backend-webgl";
 import "@mediapipe/face_mesh";
 import Webcam from "react-webcam";
 import { RunDetector } from "./utils/detector";
-import FaceDataContext from './context/FaceDataContext'
+import FaceDataContext from "./context/FaceDataContext";
 
-const inputResolution = {
-  width: 1080,
-  height: 900,
-};
-const videoConstraints = {
-  width: inputResolution.width,
-  height: inputResolution.height,
-  facingMode: "user",
-};
 function App() {
+  const inputResolution = {
+    width: 1080,
+    height: 900,
+  };
+  const videoConstraints = {
+    width: inputResolution.width,
+    height: inputResolution.height,
+    facingMode: "user",
+  };
   const { faceData, setFaceData } = useContext(FaceDataContext);
   const canvasRef = useRef(null);
   const [loaded, setLoaded] = useState(false);
+  const [flag, setFlag] = useState(false);
+  const [faceDataArraysMatrix, setFaceDataArraysMatrix] = useState([])
 
   const handleVideoLoad = (videoNode) => {
     const video = videoNode.target;
@@ -29,13 +32,35 @@ function App() {
     setLoaded(true);
   };
 
+  const validateFaceData = () => {
+    let faceDataArrays = []
+
+    if(faceData.length !== 0 ) {
+      for (let i = 0; faceDataArrays.length < 1024; i++) {
+        faceDataArrays.push(...faceData[0].keypoints);
+      
+        if (i >= 1024 / faceData.length) {
+          break;
+        }
+      }
+    }
+    return faceDataArrays
+  }
+
+  useEffect(() => {    
+    if(faceData && faceData[0] && loaded && !flag) {
+      const validated = validateFaceData();
+      setFaceDataArraysMatrix(validated)
+      setFlag(true)
+    }
+  }, [faceData, loaded, flag]);
 
   useEffect(() => {
-    if(faceData.lenght !== 0 ) {
-      // DATA with 1024 measures of facemesh
-      console.log('*****FACE MESH DATA*****', faceData)
+    if(faceDataArraysMatrix.length >= 0 && flag && loaded) {
+      console.log('*** faceDataArraysMatrix', faceDataArraysMatrix)
+      setFlag(false)
     }
-  }, [faceData])
+  },[loaded, flag, faceDataArraysMatrix])
 
   return (
     <div>
